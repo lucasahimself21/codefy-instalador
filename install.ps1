@@ -71,10 +71,18 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue) -and (Get-Command winge
   if ($LASTEXITCODE) { Warn 'O Git não instalou; tudo bem, o CodeFy funciona sem ele.' } else { Ok 'Git instalado' }
 }
 
-# ---- 3) Conexão ----
+# ---- 3) Token e conexão ----
 Write-Host ''
-& (Join-Path $NpmDir 'codefy.cmd') check
-if ($LASTEXITCODE -eq 1) { Write-Host 'Depois que o admin liberar, é só usar o codefy (não precisa instalar de novo).' -ForegroundColor Yellow }
+# Sem token embutido: cada pessoa cola o seu (dá pra trocar depois com codefy auth ou em Configurações › Token no site).
+$Cfy = Join-Path $NpmDir 'codefy.cmd'
+if (-not ((& $Cfy whoami) -match ' configurado')) {
+  & $Cfy auth
+  if ($LASTEXITCODE) { Warn 'Sem token por enquanto: depois rode codefy auth ou cole em Configurações › Token (codefy web).' }
+}
+if ((& $Cfy whoami) -match ' configurado') {
+  & $Cfy check
+  if ($LASTEXITCODE -eq 1) { Write-Host 'Depois que o admin liberar, é só usar o codefy (não precisa instalar de novo).' -ForegroundColor Yellow }
+}
 
 Write-Host ''
 B 'CodeFy instalado.'

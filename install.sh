@@ -57,10 +57,15 @@ for rc in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile"; do
   printf '\n# CodeFy\n%s\n' "$LINE" >> "$rc"
 done
 
-# ---- 3) Conexão ----
+# ---- 3) Token e conexão ----
 echo
-"$CX/bin/codefy" check
-[ $? -eq 1 ] && warn "Depois que o admin liberar, é só usar o codefy (não precisa instalar de novo)."
+# Sem token embutido: cada pessoa cola o seu (dá pra trocar depois com codefy auth ou em Configurações › Token no site).
+"$CX/bin/codefy" whoami | grep -q ' configurado' || "$CX/bin/codefy" auth </dev/tty \
+  || warn "Sem token por enquanto: depois rode codefy auth ou cole em Configurações › Token (codefy web)."
+if "$CX/bin/codefy" whoami | grep -q ' configurado'; then
+  "$CX/bin/codefy" check
+  [ $? -eq 1 ] && warn "Depois que o admin liberar, é só usar o codefy (não precisa instalar de novo)."
+fi
 
 echo
 b "CodeFy instalado."

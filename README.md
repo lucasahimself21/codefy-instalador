@@ -2,7 +2,7 @@
 
 O CodeFy é um agente que trabalha nos seus arquivos: você conversa com ele no terminal ou no navegador, e ele lê, cria e edita arquivos e roda comandos.
 
-Não precisa de Docker, de senha de administrador nem de chave.
+Não precisa de Docker nem de senha de administrador. Só do seu **token do CodeFy** (o admin manda): o instalador pede no final.
 
 ---
 
